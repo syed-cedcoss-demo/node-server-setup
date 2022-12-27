@@ -6,7 +6,6 @@ import { signJWT, verifyJWT } from "../services/jwt.js";
 
 export const signup = async (req, res) => {
   try {
-    //no validation
     let payload = req.body;
     const hashPass = await hashPassword(payload.password);
     payload = { ...payload, password: hashPass };
