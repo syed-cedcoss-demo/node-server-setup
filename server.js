@@ -40,7 +40,6 @@ const accessLogStream = fs.createWriteStream(
 );
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan(':method :url :response-time'));
-  console.log('__dirname', __dirname);
   app.use(morgan('combined', { stream: accessLogStream }));
 } else {
   app.use(morgan('combined', { stream: accessLogStream }));
@@ -62,6 +61,11 @@ app.get('/', (req, res) => res.status(200).send('<h2>Server is running...</h2>')
 //* ********** app routes ************
 app.use('/auth', userRoute);
 app.use('/user', userRoute);
+
+//* **** route not found  ***********/
+app.use('*', (req, res) => {
+  res.status(404).send({ success: 'false', msg: 'This route not exist', data: {} });
+});
 
 const port = process.env.PORT ?? 3002;
 const server = app.listen(port, () => {
