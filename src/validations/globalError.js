@@ -1,5 +1,5 @@
 const globalError = (server, app) => {
-  //if uncaughtException occured
+  //if uncaughtException occurred
   process.on("uncaughtException", (err) => {
     console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
     console.log(chalk.red(err.name, err.message));

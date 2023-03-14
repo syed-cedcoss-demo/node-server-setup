@@ -22,7 +22,7 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
-//Database Connect
+//********** database connect ************
 dbConnection();
 
 //********** middleware ************
@@ -30,12 +30,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: "1024px" }));
 app.use(cors(corsOptions));
 app.set("trust proxy", true);
-// set security HTTP headers
-app.use(helmet());
-// development logging
+
+//********** log middleware ************
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+//********** http security headers ************
+app.use(helmet());
+
 // data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 // data sanitization against XSS
@@ -55,5 +58,5 @@ const server = app.listen(port, () => {
   console.log(chalk.bgYellowBright.bold(`server is up and running on post ${port}`));
 });
 
-//global error handler
+//********* global error handler **********
 globalError(server, app);
