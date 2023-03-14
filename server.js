@@ -3,12 +3,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
+import fs from 'fs';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import xss from 'xss-clean';
-
 import { dbConnection } from './src/config/dbConnection.js';
 import userRoute from './src/routes/userRoute.js';
 import globalError from './src/validations/globalError.js';
@@ -32,8 +32,18 @@ app.use(cors(corsOptions));
 app.set('trust proxy', true);
 
 //* ********* log middleware ************
+const accessLogStream = fs.createWriteStream(
+  __dirname + `/public/logs/${new Date().toString().substring(0, 10)}.log`,
+  {
+    flags: 'a'
+  }
+);
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+  app.use(morgan(':method :url :response-time'));
+  console.log('__dirname', __dirname);
+  app.use(morgan('combined', { stream: accessLogStream }));
+} else {
+  app.use(morgan('combined', { stream: accessLogStream }));
 }
 
 //* ********* http security headers ************
