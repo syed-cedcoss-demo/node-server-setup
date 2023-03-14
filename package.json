@@ -5,7 +5,10 @@
   "description": "node server setup for large application",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "prepare": "husky install",
+    "lint": "eslint --fix ."
   },
   "author": "Syed Hasnain Mehadi",
   "license": "ISC",
@@ -26,6 +29,18 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "eslint": "^8.36.0",
+    "eslint-config-semistandard": "^17.0.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "husky": "^8.0.3",
     "nodemon": "^2.0.20"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "eslint ."
+    }
   }
 }

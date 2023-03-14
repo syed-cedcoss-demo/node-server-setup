@@ -1,8 +1,8 @@
-import chalk from "chalk";
-import userModel from "../models/userModel.js";
-import { registrationMail } from "../services/email.js";
-import { hashPassword, verifyPassword } from "../services/hash.js";
-import { signJWT, verifyJWT } from "../services/jwt.js";
+import chalk from 'chalk';
+import userModel from '../models/userModel.js';
+import { registrationMail } from '../services/email.js';
+import { hashPassword } from '../services/hash.js';
+import { signJWT } from '../services/jwt.js';
 
 export const signup = async (req, res) => {
   try {
@@ -14,7 +14,7 @@ export const signup = async (req, res) => {
     await registrationMail({
       email: user?.email,
       name: user?.username,
-      url: "https://yopmail.com/en/wm", //add verification url
+      url: 'https://yopmail.com/en/wm' // add verification url
     });
     res.status(200).send({ token, _id: user?._id, email: user?.email });
   } catch (error) {
