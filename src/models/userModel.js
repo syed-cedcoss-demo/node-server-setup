@@ -1,36 +1,36 @@
-import { model, Schema } from "mongoose";
+import { model, Schema } from 'mongoose';
 
 const userSchema = new Schema(
   {
     email: {
       type: String,
-      unique: true,
+      unique: true
     },
     username: {
       type: String,
-      unique: true,
+      unique: true
     },
     firstName: {
-      type: String,
+      type: String
     },
     lastName: {
-      type: String,
+      type: String
     },
     password: {
       type: String,
-      select: false,
+      select: false
     },
     isActive: {
       type: Boolean,
-      default: false,
+      default: false
     },
     otp: {
       type: Number,
-      default: Math.floor(Math.random() * 1000000),
-    },
+      default: Math.floor(Math.random() * 1000000)
+    }
   },
   { timestamps: true }
 );
 
-const userModel = model("user", userSchema);
+const userModel = model('user', userSchema);
 export default userModel;
