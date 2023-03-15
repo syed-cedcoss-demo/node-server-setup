@@ -1,4 +1,5 @@
 import chalk from 'chalk';
+import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -29,11 +30,12 @@ dbConnection();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '1024px' }));
 app.use(cors(corsOptions));
+app.use(compression());
 app.set('trust proxy', true);
 
 //* ********* log middleware ************
 const accessLogStream = fs.createWriteStream(
-  __dirname + `/public/logs/${new Date().toString().substring(0, 10)}.log`,
+  __dirname + `/public/logs/${new Date().toString().substring(0, 10)}.txt`,
   {
     flags: 'a'
   }
