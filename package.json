@@ -43,5 +43,8 @@
     "hooks": {
       "pre-commit": "eslint ."
     }
+  },
+  "engines": {
+    "node": ">=18.13.0"
   }
 }
