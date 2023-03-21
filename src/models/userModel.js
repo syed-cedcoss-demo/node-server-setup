@@ -6,21 +6,14 @@ const userSchema = new Schema(
       type: String,
       unique: true
     },
-    username: {
-      type: String,
-      unique: true
-    },
-    firstName: {
-      type: String
-    },
-    lastName: {
+    name: {
       type: String
     },
     password: {
       type: String,
       select: false
     },
-    isActive: {
+    is_active: {
       type: Boolean,
       default: false
     },

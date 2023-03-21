@@ -7,9 +7,7 @@ import { signJWT, verifyJWT } from '../services/jwt.js';
 export const signup = async (req, res) => {
   try {
     let payload = req.body;
-    const isUser = await userModel.find({
-      $or: [{ email: { $eq: payload?.email } }, { username: { $eq: payload?.username } }]
-    });
+    const isUser = await userModel.find({ email: { $eq: payload?.email } });
     if (isUser?.length !== 0) {
       return res.status(200).send({ success: false, msg: 'user already exist' });
     }
@@ -18,9 +16,9 @@ export const signup = async (req, res) => {
     const user = await userModel.create(payload);
     const token = await signJWT({ id: user?._id });
     await registrationMail({
-      username: user?.username,
+      name: user?.name,
       email: payload?.email,
-      url: `${process.env.SERVER_URL}/api/auth/verify?token=${token}` // verification url
+      url: `${process.env.SERVER_URL}/auth/verify?token=${token}`
     });
     res.status(200).send({
       success: true,
@@ -39,11 +37,12 @@ export const verify = async (req, res) => {
     if (isValid?.id) {
       const isActive = await userModel.updateOne(
         { _id: isValid?.id },
-        { $set: { isActive: true } }
+        { $set: { is_active: true } }
       );
       if (isActive?.modifiedCount > 0) {
         res.status(200).send(
-          `<h2 style="color:green">Your account verified successful, Redirecting to login page...</h2> <script>
+          `<h2 style="color:green">Your account verified successful, Redirecting to login page...</h2> 
+          <script>
             setTimeout(()=>{
                 window.location.href="${process.env.APP_URL}"
             },3000)
@@ -62,7 +61,7 @@ export const login = async (req, res) => {
     const payload = req.body;
     const user = await userModel.find(
       { email: { $eq: payload?.email } },
-      { password: 1, isActive: 1 }
+      { password: 1, is_active: 1 }
     );
     if (user.length <= 0) {
       return res
