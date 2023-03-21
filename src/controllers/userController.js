@@ -14,11 +14,19 @@ export const signup = async (req, res) => {
     await registrationMail({
       email: user?.email,
       name: user?.username,
-      url: 'https://yopmail.com/en/wm' // add verification url
+      url: token // add verification url
     });
-    res.status(200).send({ token, _id: user?._id, email: user?.email });
+    res.status(200).send({
+      success: true,
+      msg: 'User successfully register, check email to verify',
+      data: {}
+    });
   } catch (error) {
     console.log(chalk.bgRed.bold(error?.message));
-    res.status(200).send(error?.message);
+    res.status(200).send({
+      success: false,
+      msg: error?.message,
+      data: {}
+    });
   }
 };
