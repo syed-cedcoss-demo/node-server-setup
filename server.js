@@ -61,9 +61,9 @@ app.use(xss());
 //* ********** public path ************
 app.use('/images', express.static(__dirname + '/public/images'));
 app.use('/upload', express.static(__dirname + '/public/uploads'));
-app.get('/', (req, res) => res.status(200).send('<h2>Server is running...</h2>'));
 
 //* ********** app routes ************
+app.get('/', (req, res) => res.status(200).send('<h2>Server is running...</h2>'));
 app.use('/auth', authRoute);
 app.use('/user', userRoute);
 
