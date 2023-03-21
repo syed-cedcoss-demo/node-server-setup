@@ -11,7 +11,9 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import xss from 'xss-clean';
 import { dbConnection } from './src/config/dbConnection.js';
+import authRoute from './src/routes/authRoute.js';
 import userRoute from './src/routes/userRoute.js';
+import cronJob from './src/services/cronJob.js';
 import globalError from './src/validations/globalError.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -35,7 +37,8 @@ app.set('trust proxy', true);
 
 //* ********* log middleware ************
 const accessLogStream = fs.createWriteStream(
-  __dirname + `/public/logs/${new Date().toString().substring(0, 10)}.txt`,
+  __dirname +
+    `/public/logs/${new Date().toString().substring(0, 10)}.txt`.replaceAll(' ', '-'),
   {
     flags: 'a'
   }
@@ -61,7 +64,7 @@ app.use('/upload', express.static(__dirname + '/public/uploads'));
 app.get('/', (req, res) => res.status(200).send('<h2>Server is running...</h2>'));
 
 //* ********** app routes ************
-app.use('/auth', userRoute);
+app.use('/auth', authRoute);
 app.use('/user', userRoute);
 
 //* **** route not found  ***********/
@@ -76,3 +79,5 @@ const server = app.listen(port, () => {
 
 //* ******** global error handler **********
 globalError(server, app);
+
+cronJob();
