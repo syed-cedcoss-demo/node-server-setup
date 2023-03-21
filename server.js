@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
+import rateLimit from 'express-rate-limit';
 import fs from 'fs';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -34,6 +35,15 @@ app.use(express.urlencoded({ extended: true, limit: '1024px' }));
 app.use(cors(corsOptions));
 app.use(compression());
 app.set('trust proxy', true);
+
+//* ******* rate limiter: 150 req per 10 min ********* */
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 150,
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use(limiter);
 
 //* ********* log middleware ************
 const accessLogStream = fs.createWriteStream(
