@@ -1,8 +1,8 @@
 export const fourOtp = () => {
-  const raw = '1234567890';
-  const OTP = '123';
-  for (let i = 1; i <= 4; i++) {
-    console.log('raw.charAt(i', raw.charAt(i));
+  const digits = '0123456789';
+  let OTP = '';
+  for (let i = 0; i < 4; i++) {
+    OTP += digits[Math.floor(Math.random() * 10)];
   }
   return OTP;
 };

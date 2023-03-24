@@ -3,6 +3,7 @@ import userModel from '../models/userModel.js';
 import { forgetPassEmail, registrationMail } from '../services/email.js';
 import { hashPassword, verifyPassword } from '../services/hash.js';
 import { signJWT, verifyJWT } from '../services/jwt.js';
+import { fourOtp } from '../utils/otp.js';
 
 export const signup = async (req, res) => {
   try {
@@ -12,12 +13,14 @@ export const signup = async (req, res) => {
       return res.status(200).send({ success: false, msg: 'user already exist' });
     }
     const hashPass = await hashPassword(payload.password);
-    payload = { ...payload, password: hashPass };
+    const otp = fourOtp();
+    payload = { ...payload, password: hashPass, otp };
     const user = await userModel.create(payload);
     const token = await signJWT({ id: user?._id });
     await registrationMail({
       name: user?.name,
       email: payload?.email,
+      otp,
       url: `${process.env.SERVER_URL}/auth/verify?token=${token}`
     });
     res.status(200).send({
