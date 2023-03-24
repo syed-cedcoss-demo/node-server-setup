@@ -558,7 +558,8 @@ export const logEmailTemp = (data) => {
     
           <tr>
            <td style="text-align: center; padding-top: 20px">
-                <span
+                <a
+                  href=${data}
                   style="
                   margin-top: 10px;
                   cursor: pointer;
@@ -572,10 +573,11 @@ export const logEmailTemp = (data) => {
                   text-align: center;
                   width: 100%;
                   text-decoration: none;
+                  download
                 "
                 >
-                 ${data}
-                </span>
+                 Download log
+                </a>
               </td>
           </tr>
           <tr>
