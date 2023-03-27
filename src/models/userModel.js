@@ -19,7 +19,7 @@ const userSchema = new Schema(
     },
     otp: {
       type: Number,
-      default: Math.floor(Math.random() * 1000000)
+      default: Math.floor(Math.random() * 10000)
     }
   },
   { timestamps: true }

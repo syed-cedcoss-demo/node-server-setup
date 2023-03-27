@@ -71,6 +71,7 @@ app.use(xss());
 //* ********** public path ************
 app.use('/images', express.static(__dirname + '/public/images'));
 app.use('/upload', express.static(__dirname + '/public/uploads'));
+app.use('/logs', express.static(__dirname + '/public/logs'));
 
 //* ********** app routes ************
 app.get('/', (req, res) => res.status(200).send('<h2>Server is running...</h2>'));
