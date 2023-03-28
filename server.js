@@ -21,18 +21,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 dotenv.config();
 
-const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:4000', 'http://127.0.0.1:5500'],
-  optionsSuccessStatus: 200
-};
-
 //* ********* database connect ************
 dbConnection();
 
 //* ********* middleware ************
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '1024px' }));
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(compression());
 app.set('trust proxy', true);
 
