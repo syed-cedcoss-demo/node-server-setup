@@ -5,14 +5,16 @@ import { forget, logEmailTemp, signup } from '../../public/templates/email.js';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  host: 'smtp-mail.outlook.com',
+  service: 'outlook',
+  secureConnection: false,
+  tls: {
+    ciphers: 'SSLv3'
+  },
+  port: 587,
   auth: {
     user: process.env.EMAIL_ID,
     pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    ciphers: 'SSLv3',
-    rejectUnauthorized: false
   }
 });
 
