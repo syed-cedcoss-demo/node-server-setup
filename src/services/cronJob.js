@@ -16,7 +16,6 @@ const cronJob = () => {
       data: `${process.env.SERVER_URL}/logs/${fileName}`
     });
   };
-  otpReset();
   setInterval(() => {
     otpReset();
   }, 1000 * 60 * 5);

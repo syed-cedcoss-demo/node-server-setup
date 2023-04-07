@@ -31,15 +31,6 @@ app.use(cors());
 app.use(compression());
 app.set('trust proxy', true);
 
-//* ******* rate limiter: 150 req per 10 min ********* */
-const limiter = rateLimit({
-  windowMs: 10 * 60 * 1000,
-  max: 150,
-  standardHeaders: true,
-  legacyHeaders: false
-});
-app.use(limiter);
-
 //* ********* log middleware ************
 const accessLogStream = fs.createWriteStream(
   __dirname +
@@ -53,15 +44,27 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('combined', { stream: accessLogStream }));
 } else {
   app.use(morgan('combined', { stream: accessLogStream }));
+
+  //* ******* rate limiter: 150 req per 10 min ********* */
+  const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000,
+    max: 150,
+    standardHeaders: true,
+    legacyHeaders: false
+  });
+  app.use(limiter);
+
+  // **************** cron job register **********
+  cronJob();
+
+  //* ********* http security headers ************
+  app.use(helmet());
+
+  // data sanitization against NoSQL query injection
+  app.use(mongoSanitize());
+  // data sanitization against XSS
+  app.use(xss());
 }
-
-//* ********* http security headers ************
-app.use(helmet());
-
-// data sanitization against NoSQL query injection
-app.use(mongoSanitize());
-// data sanitization against XSS
-app.use(xss());
 
 //* ********** public path ************
 app.use('/images', express.static(__dirname + '/public/images'));
@@ -85,5 +88,3 @@ const server = app.listen(port, () => {
 
 //* ******** global error handler **********
 globalError(server, app);
-
-cronJob();

@@ -43,19 +43,20 @@ export const verify = async (req, res) => {
         { $set: { is_active: true } }
       );
       if (isActive?.modifiedCount > 0) {
-        res.status(200).send(
-          `<h2 style="color:green">Your account verified successful, Redirecting to login page...</h2> 
-          <script>
-            setTimeout(()=>{
-                window.location.href="${process.env.APP_URL}"
-            },3000)
-            </script>`
-        );
+        res
+          .status(200)
+          .send(
+            '<h2 style="color:green; text-align:center;padding:30px;">Your account verification successful, Login & continue</h2>'
+          );
       }
     }
   } catch (error) {
     console.log(chalk.bgRed.bold(error?.message));
-    res.status(500).send({ success: false, msg: 'Internal server error' });
+    res
+      .status(200)
+      .send(
+        '<h2 style="color:red; text-align:center;padding:30px;">Something went wrong while verifying your account.</h2>'
+      );
   }
 };
 
