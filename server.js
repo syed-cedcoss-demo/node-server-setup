@@ -3,15 +3,11 @@ import compression from 'compression';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
-import mongoSanitize from 'express-mongo-sanitize';
-import rateLimit from 'express-rate-limit';
-import fs from 'fs';
-import helmet from 'helmet';
-import morgan from 'morgan';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import xss from 'xss-clean';
+
 import { dbConnection } from './src/config/dbConnection.js';
+import security from './src/config/security.js';
 import authRoute from './src/routes/authRoute.js';
 import userRoute from './src/routes/userRoute.js';
 import cronJob from './src/services/cronJob.js';
@@ -24,6 +20,9 @@ dotenv.config();
 //* ********* database connect ************
 dbConnection();
 
+// **************** cron job register **********
+cronJob();
+
 //* ********* middleware ************
 app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '1024px' }));
@@ -31,39 +30,8 @@ app.use(cors());
 app.use(compression());
 app.set('trust proxy', true);
 
-//* ********* log middleware ************
-const accessLogStream = fs.createWriteStream(
-  __dirname +
-    `/public/logs/${new Date().toString().substring(0, 10)}.txt`.replaceAll(' ', '-'),
-  {
-    flags: 'a'
-  }
-);
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan(':method :url :response-time'));
-  app.use(morgan('combined', { stream: accessLogStream }));
-} else {
-  app.use(morgan('combined', { stream: accessLogStream }));
-
-  //* ******* rate limiter: 150 req per 10 min ********* */
-  const limiter = rateLimit({
-    windowMs: 10 * 60 * 1000,
-    max: 150,
-    standardHeaders: true,
-    legacyHeaders: false
-  });
-  app.use(limiter);
-
-  // **************** cron job register **********
-  cronJob();
-
-  //* ********* http security headers ************
-  app.use(helmet());
-
-  // data sanitization against NoSQL query injection
-  app.use(mongoSanitize());
-  // data sanitization against XSS
-  app.use(xss());
+if (process.env.NODE_ENV === 'production') {
+  security(app);
 }
 
 //* ********** public path ************
