@@ -6,11 +6,11 @@ import {
   signup,
   verify
 } from '../controllers/authController.js';
-import { userSchema, validate } from '../middleware/userSchema.js';
+import { signupValidate } from '../middleware/bodyValidate.js';
 
 const router = express.Router();
 
-router.post('/signup', validate(userSchema), signup);
+router.post('/signup', signupValidate, signup);
 router.get('/verify', verify);
 router.post('/login', login);
 router.post('/forget-password', forgetPassword);
